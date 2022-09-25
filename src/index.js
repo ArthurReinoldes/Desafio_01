@@ -10,6 +10,8 @@ app.use(express.json());
 
 const users = [];
 
+//Verify if user exists
+
 function checksExistsUserAccount(request, response, next) {
   const{username} = request.headers;
 
@@ -24,6 +26,7 @@ function checksExistsUserAccount(request, response, next) {
   next();
 }
 
+//Create user
 app.post('/users',(request, response) => {
   const{name, username} = request.body;
   
@@ -45,12 +48,14 @@ app.post('/users',(request, response) => {
   return response.status(201).json(newuser).send();
 }); 
 
+//get todos from a user.
 app.get('/todos', checksExistsUserAccount, (request, response) => {
   const{user} = request;
 
   return response.json(user.todos);
 });
 
+//create todos for a user passed by params
 app.post('/todos', checksExistsUserAccount, (request, response) => {
   const{user} = request;
   const{title, deadline} = request.body;
@@ -68,6 +73,7 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
   return response.status(201).json(newtodo);
 });
 
+//update todos for a user
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   const{user} = request;
   const{title, deadline} = request.body;
@@ -87,6 +93,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
 
 });
 
+//update the status "done" for a todo.
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
   const{user} = request;
   const{id} = request.params;
@@ -103,6 +110,7 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
 
 });
 
+//delete a todo
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
   const{user} = request;
   const{id} = request.params;
@@ -119,5 +127,4 @@ app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
 
 });
 
-//app.listen(5555);
 module.exports = app;
